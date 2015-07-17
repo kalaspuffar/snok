@@ -4,7 +4,7 @@
  * Test class for entity generator class
  */
 
-class SnokTest extends PHPUnit_Framework_TestCase {
+class Snok§Test extends PHPUnit_Framework_TestCase {
     const DB_NAME = 'tests/data/test.db';
     private $testdb;
 
@@ -35,7 +35,15 @@ class SnokTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testGenerate() {
+        $q = $this->testdb->prepare("select * from tablea");
+        $q->execute();
 
+        for ($i = 0; $i < $q->columnCount(); $i++) {
+            $col = $q->getColumnMeta($i);
+            print_r($col);
+        }
+
+        // TODO: Identify the primary keys.
     }
 
 
