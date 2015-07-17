@@ -1,11 +1,13 @@
 <?php
-class EntityGenerator
-{
-    public function __construct()
-    {
+
+/**
+ *  Generates entities from database schema.
+ */
+class EntityGenerator {
+    public function __construct() {
     }
 
-    public function generate()
-    {
+    public function generate() {
     }
 }
+?>
