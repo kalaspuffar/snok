@@ -1,10 +1,10 @@
 <?php
-
+namespace tests\Snok;
 /**
  * Test class for entity generator class
  */
 
-class Snok§Test extends PHPUnit_Framework_TestCase {
+class SnokTest extends \PHPUnit_Framework_TestCase {
     const DB_NAME = 'tests/data/test.db';
     private $testdb;
 
@@ -12,7 +12,7 @@ class Snok§Test extends PHPUnit_Framework_TestCase {
      * @before
      */
     public function setupDB() {
-        $this->testdb = new PDO('sqlite:' . self::DB_NAME);
+        $this->testdb = new \PDO('sqlite:' . self::DB_NAME);
         $this->testdb->exec("CREATE TABLE IF NOT EXISTS tablea (id INTEGER PRIMARY KEY, name TEXT)");
         $this->testdb->exec("CREATE TABLE IF NOT EXISTS tableb (id INTEGER PRIMARY KEY, name TEXT)");
         $this->testdb->exec("CREATE TABLE IF NOT EXISTS tablec (id INTEGER PRIMARY KEY, name TEXT)");
@@ -35,15 +35,8 @@ class Snok§Test extends PHPUnit_Framework_TestCase {
     }
 
     public function testGenerate() {
-        $q = $this->testdb->prepare("select * from tablea");
-        $q->execute();
-
-        for ($i = 0; $i < $q->columnCount(); $i++) {
-            $col = $q->getColumnMeta($i);
-            print_r($col);
-        }
-
-        // TODO: Identify the primary keys.
+        $generator = new \Snok\EntityGenerator($this->testdb);
+        $generator->generate();
     }
 
 
