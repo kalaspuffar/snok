@@ -1,0 +1,696 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"para",
+				"parameter"
+			],
+			[
+				"Title",
+				"TitlesCollection"
+			],
+			[
+				"Titles",
+				"TitlesCollection	(TitlesCollection.php)"
+			],
+			[
+				"art",
+				"article_category_id"
+			],
+			[
+				"sub",
+				"subscription"
+			],
+			[
+				"con",
+				"context"
+			],
+			[
+				"getM",
+				"getMessage	(test.php)"
+			],
+			[
+				"getall",
+				"getallheaders	(client.php)"
+			],
+			[
+				"base",
+				"base64_encode"
+			],
+			[
+				"pass",
+				"passthru"
+			],
+			[
+				"defau",
+				"default_template_id"
+			],
+			[
+				"Auth",
+				"Authenticators	(worktodo)"
+			],
+			[
+				"buil",
+				"buildContext"
+			],
+			[
+				"artice_ver",
+				"article_version"
+			],
+			[
+				"article_versions",
+				"article_versions_publications_sections	(version.php)"
+			],
+			[
+				"Model_Art",
+				"Model_Article_Version	(template.php)"
+			],
+			[
+				"Model_Iss",
+				"Model_Issue_Version	(issue.php)"
+			],
+			[
+				"sort",
+				"sortorder"
+			],
+			[
+				"class",
+				"classname"
+			],
+			[
+				"templ",
+				"template_	(TemplatesCollection.php)"
+			],
+			[
+				"article",
+				"article_template_id"
+			],
+			[
+				"sec",
+				"section"
+			],
+			[
+				"Json",
+				"JsonRPC"
+			],
+			[
+				"co",
+				"coverimage"
+			],
+			[
+				"J",
+				"JSONRpcContext"
+			],
+			[
+				"getCOn",
+				"getContext"
+			],
+			[
+				"bui",
+				"buildContext"
+			],
+			[
+				"json_",
+				"json_encode"
+			],
+			[
+				"handler_n",
+				"handler_namespace"
+			],
+			[
+				"Jso",
+				"JsonRPC"
+			],
+			[
+				"_",
+				"_statements"
+			],
+			[
+				"trace",
+				"traceString"
+			],
+			[
+				"ref",
+				"reference"
+			],
+			[
+				"Media",
+				"MediaInfo"
+			],
+			[
+				"desc",
+				"describing"
+			],
+			[
+				"paym",
+				"paymethod_id"
+			],
+			[
+				"des",
+				"description"
+			],
+			[
+				"form",
+				"formData"
+			],
+			[
+				"article_ca",
+				"article_category_id	(map.php)"
+			],
+			[
+				"str",
+				"string"
+			],
+			[
+				"int",
+				"int64"
+			],
+			[
+				"oa",
+				"oauth	(clients.php)"
+			],
+			[
+				"Cat",
+				"CategoryMap"
+			],
+			[
+				"paragra",
+				"paragraphmap	(questions)"
+			],
+			[
+				"param",
+				"parameters"
+			],
+			[
+				"addre",
+				"addresses/1	(questions)"
+			],
+			[
+				"subsc",
+				"subscriptions"
+			],
+			[
+				"title",
+				"title/{title_id"
+			],
+			[
+				"media",
+				"medias/{media_id"
+			],
+			[
+				"start",
+				"startpages/1	(questions)"
+			],
+			[
+				"pus",
+				"pushmessages"
+			],
+			[
+				"Sto",
+				"SHA1Storage	(SHA1Storage.php)"
+			],
+			[
+				"getFil",
+				"getFileString	(SHA1Storage.php)"
+			],
+			[
+				"STR",
+				"STRING_AS_A_VARIANT_TO_WRITE"
+			],
+			[
+				"delete",
+				"deleteFile"
+			],
+			[
+				"variant",
+				"variant_stream"
+			],
+			[
+				"delet",
+				"deleteFile	(SHA1Storage.php)"
+			],
+			[
+				"getCont",
+				"getContentFromHash"
+			],
+			[
+				"temp_in",
+				"temp_infile2"
+			],
+			[
+				"create",
+				"createTempFile"
+			],
+			[
+				"assert",
+				"assertSame"
+			],
+			[
+				"write",
+				"writeFile	(SHA1Storage.php)"
+			],
+			[
+				"tmp",
+				"tmpfname"
+			],
+			[
+				"putF",
+				"putFile	(SHA1Storage.php)"
+			],
+			[
+				"stor",
+				"storage_container"
+			],
+			[
+				"Open",
+				"OpenStack"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "Packages/User/swagger.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Makefile/Make.sublime-build",
+					""
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					"Clean"
+				],
+				[
+					"Packages/User/swagger.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/User/swagger.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/danielp/github/snok"
+	],
+	"file_history":
+	[
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/Titles/Issues/ArticlesItem.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/Devices/PushnotificationsItem.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/Accounts/SessionsCollection.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/Titles/Issues/TemplatesCollection.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/Titles/IssuesCollection.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/ClientsItem.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/Titles/Issues/ArticlesCollection.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/TitlesCollection.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/FilesItem.php",
+		"/home/danielp/worktodo",
+		"/home/danielp/specwork/prenly-specifications/api/rest/v1/swagger-1.0.0.yaml",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/templates/property.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/swagger/src/raw/fastroute/dispatchmethodbody.raw",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/swagger/src/Generator/FastRoute.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Api/Rest/V1/Dispatcher.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/Security/Permission.php",
+		"/home/danielp/backwork/textalk-content/app/classes/authenticator/tulo.php",
+		"/home/danielp/backwork/textalk-content/app/classes/authenticator.php",
+		"/home/danielp/backwork/textalk-content/app/classes/authenticator/client.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/Controller.php",
+		"/home/danielp/backwork/textalk-content/prenly/tests/Controller/TestHarness.php",
+		"/home/danielp/backwork/textalk-content/app/tasks/swagger.php",
+		"/home/danielp/backwork/textalk-content/prenly/tests/Controller/TitlesCollection.php",
+		"/home/danielp/backwork/textalk-content/prenly/tests/Security/Permission.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/swagger/src/Generator/FastRoute/Template/Parameter.php",
+		"/home/danielp/backwork/textalk-content/app/classes/api/v2/base.php",
+		"/home/danielp/backwork/textalk-content/app/classes/api/v2/server.php",
+		"/home/danielp/backwork/textalk-content/app/classes/controller/api/v2/media.php",
+		"/home/danielp/backwork/textalk-content/app/classes/api/v2/api/media.php",
+		"/home/danielp/backwork/textalk-content/app/classes/test/base.php",
+		"/home/danielp/backwork/textalk-content/prenly/tests/Controller/Base.php",
+		"/home/danielp/backwork/textalk-content/app/config/auth.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/JSONRpcContext.php",
+		"/home/danielp/backwork/textalk-content/app/classes/controller/admin/paragraphmaps.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/base.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/Security/Authenticators/Application.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/Security/Authenticator/Client.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/Security/Authenticator/Application.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/Security/Authenticator/Account.php",
+		"/home/danielp/backwork/textalk-content/prenly/tests/Exception/ExceptionCodes.php",
+		"/home/danielp/backwork/textalk-content/app/tests/rest/orders.php",
+		"/home/danielp/backwork/textalk-content/app/seeds/subscriptions.sql",
+		"/home/danielp/backwork/textalk-content/app/classes/controller/context.php",
+		"/home/danielp/backwork/textalk-content/app/classes/controller/context/scope.php",
+		"/home/danielp/backwork/textalk-content/app/classes/authorizer/subscription.php",
+		"/home/danielp/backwork/textalk-content/app/classes/authenticator/account.php",
+		"/home/danielp/backwork/textalk-content/app/seeds/customer2.sql",
+		"/home/danielp/backwork/textalk-content/app/seeds/accounts.sql",
+		"/home/danielp/backwork/textalk-content/app/classes/authenticator/application.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Exception/AuthorizationException.php",
+		"/home/danielp/backwork/textalk-content/app/classes/test/rest/base.php",
+		"/home/danielp/backwork/textalk-content/app/config/development_local/config.php",
+		"/home/danielp/backwork/textalk-content/app/tasks/test.php",
+		"/home/danielp/backwork/textalk-content/fuel/fuel/core/classes/dbutil.php",
+		"/home/danielp/backwork/textalk-content/app/classes/api/v2/api/article.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/Security/Authenticators/Client.php",
+		"/home/danielp/backwork/textalk-content/app/bootstrap.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/client.php",
+		"/home/danielp/backwork/textalk-content/app/config/development_local/db.php",
+		"/home/danielp/backwork/textalk-content/app/config/development/db.php",
+		"/home/danielp/backwork/textalk-content/phinx.php",
+		"/home/danielp/backwork/textalk-content/app/config/config.php",
+		"/home/danielp/backwork/textalk-content/package.json",
+		"/home/danielp/backwork/textalk-content/fuel/fuel/core/classes/config.php",
+		"/home/danielp/backwork/textalk-content/fuel/fuel/core/classes/cli.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/device.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/device/downloads.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/title.php",
+		"/home/danielp/backwork/textalk-content/fuel/fuel/core/classes/model/crud.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Exception/SubscriptionException.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Exception/TrialExpiredException.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/Security/Context.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/Security/Authenticators/Account.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/TitlesItem.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/Security/Scope.php",
+		"/home/danielp/backwork/textalk-content/app/classes/api/exception/jsonrpcneedsubscriptionexception.php",
+		"/home/danielp/backwork/textalk-content/app/classes/api/server.php",
+		"/home/danielp/backwork/textalk-content/include/deps/Textalk/xJsonRpc-PHP/server.php",
+		"/home/danielp/backwork/textalk-content/app/classes/api/exception/subscription.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/title/image.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/template.php",
+		"/home/danielp/backwork/textalk-content/app/classes/api/v2/api/issue.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/article/version.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/issue/version.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/Titles/TemplatesCollection.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/Titles/IssuesItem.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/Titles/JobsCollection.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/Titles/TemplatesItem.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Api/Rest/V1/ClientsItem.php",
+		"/home/danielp/backwork/textalk-content/app/classes/util/settings.php",
+		"/home/danielp/backwork/textalk-content/prenly/api/rest/v1/swagger.yaml",
+		"/home/danielp/meeting",
+		"/home/danielp/specwork/swagger.yaml",
+		"/home/danielp/backwork/textalk-content/app/classes/api/v2/api/app.php",
+		"/home/danielp/backwork/textalk-content/app/classes/api/v2/api/user.php",
+		"/home/danielp/backwork/textalk-content/app/classes/authorizer.php",
+		"/home/danielp/backwork/textalk-content/include/deps/phpfastcache/phpfastcache/phpfastcache/_extensions/predis-1.0/src/Monitor/Consumer.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/src/Template/Klass.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/src/Builder/Builder.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/src/Lang/Php.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/src/Lang.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Api/Rest/V1/Accounts.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/src/Template/Template.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Exception/UnexpectedParameterException.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Exception/ObjectNotFoundException.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Exception/ValidationException.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Exception/InternalServerException.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/article/category.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/article.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/article/type.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/section.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/title/part.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/publication.php",
+		"/home/danielp/backwork/textalk-content/app/classes/model/push/registration.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Api/Rest/V1/Templates.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/swagger/src/raw/fastroute/handleexceptionmethodbody.raw",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/src/Template/NewObject.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/templates/newobject.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/templates/statement.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/src/Template/Statement.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/templates/argument.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/templates/throw.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/src/Template/ThrowStatement.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/Accounts.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Controller/V1/Templates.php",
+		"/home/danielp/backwork/textalk-content/include/deps/prenly/codify/templates/methodcall.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Exception/ParseException.php",
+		"/home/danielp/backwork/textalk-content/prenly/classes/Exception/InvalidInputException.php"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"start",
+			"getallheaders",
+			"context",
+			"\\Api\\Log",
+			"Log",
+			"\\Api\\Log",
+			"Test_Base",
+			"Model_Article_Category",
+			"category",
+			"testGetOrderCollectionForCustomer",
+			"permission",
+			"hasCredentials",
+			"Fuel::$env",
+			"\\\\Fuel::$env",
+			"'testing'",
+			"\"testing\"",
+			"testing.environments",
+			"development_root",
+			"class Config",
+			"class Cli",
+			"class DBUtil",
+			"DBUtil",
+			"context",
+			"Authenticators",
+			"Api_Exception_Subscription",
+			"template_datat",
+			"setApplication",
+			"\\Prenly\\Log::warn",
+			"false;",
+			"string",
+			"publication_time",
+			"get_hasunapprovedarticles",
+			"android",
+			"tags:",
+			"All",
+			"tags:",
+			"media",
+			"Exception",
+			"online.",
+			"category_id",
+			"category_id\n      ",
+			"\n      ",
+			"category_id",
+			"- Transaction",
+			"- OrderItem",
+			"- Permission",
+			"- Term",
+			"- Service",
+			"- Package",
+			"- SubscriptionPeriod",
+			"- CategoryMap",
+			"- SectionMap",
+			"- ParagraphMap",
+			"- Auth",
+			"- CategoryMap",
+			"- SectionMap",
+			"- ParagraphMap",
+			"- Auth",
+			"- Group",
+			"group",
+			"Group",
+			"reference",
+			"form",
+			"definitions/Media",
+			"templates",
+			"localhost:5000",
+			"delflag",
+			"template",
+			"packages",
+			"Template",
+			"reference",
+			"article",
+			"media",
+			"section",
+			"sec",
+			"/account",
+			"templates",
+			"PushMessage",
+			"- Version",
+			"query",
+			"section",
+			"/issues/",
+			"fetch",
+			"issue",
+			"articleversion",
+			"authcheck",
+			"customer_id",
+			"print_r",
+			"class ReflectionMethod",
+			"ReflectionMethod",
+			"class FastRoute",
+			"Generator",
+			"}\n",
+			"setupBranchSpecificDatabase",
+			"setup_branch",
+			"db_name",
+			"log",
+			"Test_Util_Fa",
+			"FORCE_TEST_DB_ENV",
+			"testRunDefaultAction",
+			"Api_V2_Api_User",
+			"Api_V2_Api_User\"",
+			"Invalid response encoding",
+			"Invalid",
+			"Invalid encoding",
+			"Invalid",
+			"OBJECT_SEPERATOR",
+			"BUFFER_SIZE",
+			"'storage'",
+			"Mustache_Engine"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 22.0
+	},
+	"input":
+	{
+		"height": 34.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 188.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "snok.sublime-project",
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 818.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 283.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
