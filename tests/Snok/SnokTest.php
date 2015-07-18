@@ -35,8 +35,27 @@ class SnokTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGenerate() {
-        $generator = new \Snok\EntityGenerator($this->testdb);
-        $generator->generate();
+//        $generator = new \Snok\EntityGenerator($this->testdb);
+//        $generator->generate();
+    }
+
+    public function testEntityTableA() {
+        $reflection = new \ReflectionClass("\\tests\\Snok\\TableAEntity");
+        $instance = $reflection->newInstanceWithoutConstructor();
+        $refObject = new \ReflectionClass($instance);
+        $properties = $refObject->getProperties(\ReflectionProperty::IS_PROTECTED);
+        foreach($properties as $property) {
+            if($property->name == "database") {
+                $property->setAccessible(true);
+                $property->setValue($instance, $this->testdb);
+            }
+        }
+        $method = $refObject->getConstructor();
+        $method->invoke($instance);
+
+        $instance->id = 1;
+        $instance->refresh();
+        $this->assertEquals($instance->name, "John");
     }
 
 
