@@ -7,6 +7,13 @@ abstract class BaseEntity {
     const INSERT_AUTO = "insert_statement_auto_generate";
     const UPDATE = "update_statement";
     const DELETE = "delete_statement";
+
+    const QUERY_ARRAY_STATEMENT = "statement";
+    const QUERY_ARRAY_PARAMS = "query_params";
+
+    const PRIMARY_KEY = "PRIMARY_KEYS";
+    const TABLE_NAME = "TABLE_NAME";
+
     private $statements;
     private $constants;
     private $properties;
@@ -27,7 +34,7 @@ abstract class BaseEntity {
         $refObject = new \ReflectionClass($this);
         $this->properties = $refObject->getProperties(\ReflectionProperty::IS_PUBLIC);
         $this->constants = $refObject->getConstants();
-        $tableName = $this->constants["TABLE_NAME"];
+        $tableName = $this->constants[self::TABLE_NAME];
         $statements = array();
 
         $selectStatementSQL = "SELECT * FROM " . $tableName . " WHERE ";
@@ -36,8 +43,8 @@ abstract class BaseEntity {
         $updateStatementSQL = "UPDATE " . $tableName . " SET ";
         $deleteStatementSQL = "DELETE FROM " . $tableName . " WHERE ";
 
-        $selectStatementSQL .= $this->createParamString($this->constants["PRIMARY_KEYS"], "% = :%", " AND ");
-        $deleteStatementSQL .= $this->createParamString($this->constants["PRIMARY_KEYS"], "% = :%", " AND ");
+        $selectStatementSQL .= $this->createParamString($this->constants[self::PRIMARY_KEY], "% = :%", " AND ");
+        $deleteStatementSQL .= $this->createParamString($this->constants[self::PRIMARY_KEY], "% = :%", " AND ");
 
         $propertyNames = array();
         foreach($this->properties as $property) {
@@ -46,48 +53,61 @@ abstract class BaseEntity {
         $insertStatementSQL .= "(" . $this->createParamString($propertyNames, "%", ",") . ") VALUES (";
         $insertStatementSQL .= $this->createParamString($propertyNames, ":%", ",") . ")";
 
-        $propertyNamesWithoutPrimaryKeys = array_diff($propertyNames, $this->constants["PRIMARY_KEYS"]);
+        $propertyNamesWithoutPrimaryKeys = array_diff($propertyNames, $this->constants[self::PRIMARY_KEY]);
 
         $insertStatementAutoGenerateSQL .= "(" . $this->createParamString($propertyNamesWithoutPrimaryKeys, "%", ",") . ") VALUES (";
         $insertStatementAutoGenerateSQL .= $this->createParamString($propertyNamesWithoutPrimaryKeys, ":%", ",") . ")";
 
         $updateStatementSQL .= $this->createParamString($propertyNamesWithoutPrimaryKeys, "% = :%", ",") . " WHERE ";
-        $updateStatementSQL .= $this->createParamString($this->constants["PRIMARY_KEYS"], "% = :%", " AND ");
+        $updateStatementSQL .= $this->createParamString($this->constants[self::PRIMARY_KEY], "% = :%", " AND ");
 
-        $this->statements[self::SELECT] = $this->database->prepare($selectStatementSQL);
-        $this->statements[self::INSERT] = $this->database->prepare($insertStatementSQL);
-        if($this->constants["PRIMARY_KEYS"] == $this->constants["AUTO_GENERATED_KEYS"]) {
-            $this->statements[self::INSERT_AUTO] = $this->database->prepare($insertStatementAutoGenerateSQL);
+        $this->statements[self::SELECT] = array(
+            self::QUERY_ARRAY_STATEMENT => $this->database->prepare($selectStatementSQL),
+            self::QUERY_ARRAY_PARAMS => $this->constants[self::PRIMARY_KEY]
+            );
+
+        $this->statements[self::INSERT] = array(
+            self::QUERY_ARRAY_STATEMENT => $this->database->prepare($insertStatementSQL),
+            self::QUERY_ARRAY_PARAMS => $propertyNames
+            );
+
+        if($this->constants[self::PRIMARY_KEY] == $this->constants["AUTO_GENERATED_KEYS"]) {
+            $this->statements[self::INSERT] = array(
+                self::QUERY_ARRAY_STATEMENT => $this->database->prepare($insertStatementAutoGenerateSQL),
+                self::QUERY_ARRAY_PARAMS => $propertyNamesWithoutPrimaryKeys
+                );
         }
-        $this->statements[self::UPDATE] = $this->database->prepare($updateStatementSQL);
-        $this->statements[self::DELETE] = $this->database->prepare($deleteStatementSQL);
+
+        $this->statements[self::UPDATE] = array(
+            self::QUERY_ARRAY_STATEMENT => $this->database->prepare($updateStatementSQL),
+            self::QUERY_ARRAY_PARAMS => $propertyNames
+            );
+
+        $this->statements[self::DELETE] = array(
+            self::QUERY_ARRAY_STATEMENT => $this->database->prepare($deleteStatementSQL),
+            self::QUERY_ARRAY_PARAMS => $this->constants[self::PRIMARY_KEY]
+            );
     }
 
-    private function bindProperties(&$statement) {
-        //print_r($statement->queryString);
-        // TODO only set params available in query.
+    private function bindProperties(&$queryArray) {
         foreach($this->properties as $property) {
-            /**
-             * Ugly fix so the test case works. We may not set params not available in query.
-             * Then the query will not execute for some reason. Not documented.
-             */
-            if($property->name == "name") continue;
-            $statement->bindValue(":" . $property->name, $property->getValue($this));
+            if(!in_array($property->name, $queryArray[self::QUERY_ARRAY_PARAMS])) continue;
+            $queryArray[self::QUERY_ARRAY_STATEMENT]->bindValue(":" . $property->name, $property->getValue($this));
         }
     }
 
     public function commit() {
         $this->bindProperties($this->statements[self::SELECT]);
-        if($this->statements[self::SELECT]->execute()) {
+        if($this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->execute()) {
             $this->bindProperties($this->statements[self::UPDATE]);
-            return $this->statements[self::UPDATE]->execute();
+            return $this->statements[self::UPDATE][self::QUERY_ARRAY_STATEMENT]->execute();
         } else {
-            if($this->statements[self::INSERT_AUTO]) {
+            if($this->statements[self::INSERT_AUTO][self::QUERY_ARRAY_STATEMENT]) {
                 $this->bindProperties($this->statements[self::INSERT_AUTO]);
-                return $this->statements[self::INSERT_AUTO]->execute();
+                return $this->statements[self::INSERT_AUTO][self::QUERY_ARRAY_STATEMENT]->execute();
             } else {
                 $this->bindProperties($this->statements[INSERT]);
-                return $this->statements[self::INSERT]->execute();
+                return $this->statements[self::INSERT][self::QUERY_ARRAY_STATEMENT]->execute();
             }
         }
         return false;
@@ -95,8 +115,8 @@ abstract class BaseEntity {
 
     public function refresh() {
         $this->bindProperties($this->statements[self::SELECT]);
-        if($this->statements[self::SELECT]->execute()) {
-            $result = $this->statements[self::SELECT]->fetch(\PDO::FETCH_ASSOC);
+        if($this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->execute()) {
+            $result = $this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->fetch(\PDO::FETCH_ASSOC);
             foreach($this->properties as $property) {
                 $property->setValue($this, $result[$property->name]);
             }
@@ -105,7 +125,7 @@ abstract class BaseEntity {
 
     public function delete() {
         $this->bindProperties($this->statements[self::DELETE]);
-        return $this->statements[self::DELETE]->execute();
+        return $this->statements[self::DELETE][self::QUERY_ARRAY_STATEMENT]->execute();
     }
 }
 ?>

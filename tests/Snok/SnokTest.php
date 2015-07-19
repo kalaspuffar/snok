@@ -13,17 +13,17 @@ class SnokTest extends \PHPUnit_Framework_TestCase {
      */
     public function setupDB() {
         $this->testdb = new \PDO('sqlite:' . self::DB_NAME);
-        $this->testdb->exec("CREATE TABLE IF NOT EXISTS tablea (id INTEGER PRIMARY KEY, name TEXT)");
-        $this->testdb->exec("CREATE TABLE IF NOT EXISTS tableb (id INTEGER PRIMARY KEY, name TEXT)");
-        $this->testdb->exec("CREATE TABLE IF NOT EXISTS tablec (id INTEGER PRIMARY KEY, name TEXT)");
+        $this->testdb->exec("CREATE TABLE IF NOT EXISTS people (id INTEGER PRIMARY KEY, name TEXT)");
+        $this->testdb->exec("CREATE TABLE IF NOT EXISTS species (id INTEGER PRIMARY KEY, name TEXT)");
+        $this->testdb->exec("CREATE TABLE IF NOT EXISTS tools (id INTEGER PRIMARY KEY, name TEXT)");
 
         $data = array(
-                "tablea" => array('John', 'Sally', 'Peter'),
-                "tableb" => array('Dog', 'Cat', 'Hamster'),
-                "tablec" => array('Hammer', 'Screwdriver', 'Ruler')
+                "people" => array('John', 'Sally', 'Peter'),
+                "species" => array('Dog', 'Cat', 'Hamster'),
+                "tools" => array('Hammer', 'Screwdriver', 'Ruler')
             );
 
-        foreach(["tablea", "tableb", "tablec"] as $table) {
+        foreach(["people", "species", "tools"] as $table) {
             $insert = "INSERT INTO {$table} (name) VALUES (:name)";
             $stmt = $this->testdb->prepare($insert);
             $stmt->bindParam(':name', $name);
@@ -40,7 +40,7 @@ class SnokTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testEntityTableA() {
-        $reflection = new \ReflectionClass("\\tests\\Snok\\TableAEntity");
+        $reflection = new \ReflectionClass("\\tests\\Snok\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $refObject = new \ReflectionClass($instance);
         $properties = $refObject->getProperties(\ReflectionProperty::IS_PROTECTED);
