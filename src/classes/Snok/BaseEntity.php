@@ -61,22 +61,24 @@ abstract class BaseEntity {
         $updateStatementSQL .= $this->createParamString($propertyNamesWithoutPrimaryKeys, "% = :%", ",") . " WHERE ";
         $updateStatementSQL .= $this->createParamString($this->constants[self::PRIMARY_KEY], "% = :%", " AND ");
 
-        $this->statements[self::SELECT] = array(
-            self::QUERY_ARRAY_STATEMENT => $this->database->prepare($selectStatementSQL),
-            self::QUERY_ARRAY_PARAMS => $this->constants[self::PRIMARY_KEY]
-            );
+        try {
+            $this->statements[self::SELECT] = array(
+                self::QUERY_ARRAY_STATEMENT => $this->database->prepare($selectStatementSQL),
+                self::QUERY_ARRAY_PARAMS => $this->constants[self::PRIMARY_KEY]
+                );
+        } catch (\Exception $e) {
+            print_r($e->getMessage());
+        }
 
         $this->statements[self::INSERT] = array(
             self::QUERY_ARRAY_STATEMENT => $this->database->prepare($insertStatementSQL),
             self::QUERY_ARRAY_PARAMS => $propertyNames
             );
 
-        if($this->constants[self::PRIMARY_KEY] == $this->constants["AUTO_GENERATED_KEYS"]) {
-            $this->statements[self::INSERT] = array(
-                self::QUERY_ARRAY_STATEMENT => $this->database->prepare($insertStatementAutoGenerateSQL),
-                self::QUERY_ARRAY_PARAMS => $propertyNamesWithoutPrimaryKeys
-                );
-        }
+        $this->statements[self::INSERT_AUTO] = array(
+            self::QUERY_ARRAY_STATEMENT => $this->database->prepare($insertStatementAutoGenerateSQL),
+            self::QUERY_ARRAY_PARAMS => $propertyNamesWithoutPrimaryKeys
+            );
 
         $this->statements[self::UPDATE] = array(
             self::QUERY_ARRAY_STATEMENT => $this->database->prepare($updateStatementSQL),
@@ -87,6 +89,7 @@ abstract class BaseEntity {
             self::QUERY_ARRAY_STATEMENT => $this->database->prepare($deleteStatementSQL),
             self::QUERY_ARRAY_PARAMS => $this->constants[self::PRIMARY_KEY]
             );
+
     }
 
     private function bindProperties(&$queryArray) {
@@ -96,17 +99,43 @@ abstract class BaseEntity {
         }
     }
 
+    private function checkAllPrimaryKeys() {
+        $keys = $this->constants[self::PRIMARY_KEY];
+        foreach($this->properties as $property) {
+            if(!in_array($property->name, $keys)) continue;
+            if(!empty($property->getValue($this))) {
+                if(($key = array_search($property->name, $keys)) !== false) {
+                    unset($keys[$key]);
+                }
+            }
+        }
+        return count($keys) == 0;
+    }
+
     public function commit() {
-        $this->bindProperties($this->statements[self::SELECT]);
-        if($this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->execute()) {
-            $this->bindProperties($this->statements[self::UPDATE]);
-            return $this->statements[self::UPDATE][self::QUERY_ARRAY_STATEMENT]->execute();
+        if(!$this->checkAllPrimaryKeys()) {
+            if($this->constants[self::PRIMARY_KEY] != $this->constants["AUTO_GENERATED_KEYS"]) return new \Snok\Exception\InvalidOperationException("Trying to auto generate ids when primary keys aren't the same as auto generated. Try creating setting id's instead.");
+            $this->bindProperties($this->statements[self::INSERT_AUTO]);
+            $status = $this->statements[self::INSERT_AUTO][self::QUERY_ARRAY_STATEMENT]->execute();
+            $newIDs = array();
+            foreach($this->constants[self::PRIMARY_KEY] as $key) {
+                $newIDs[$key] = $this->database->lastInsertId($key);
+            }
+            foreach($this->properties as $property) {
+                if(!array_key_exists($property->name, $newIDs)) continue;
+                $property->setValue($this, $newIDs[$property->name]);
+            }
+
+            return $status;
         } else {
-            if($this->statements[self::INSERT_AUTO][self::QUERY_ARRAY_STATEMENT]) {
-                $this->bindProperties($this->statements[self::INSERT_AUTO]);
-                return $this->statements[self::INSERT_AUTO][self::QUERY_ARRAY_STATEMENT]->execute();
+            $this->bindProperties($this->statements[self::SELECT]);
+            $this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->execute();
+            $result = $this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->fetch(\PDO::FETCH_ASSOC);
+            if($result) {
+                $this->bindProperties($this->statements[self::UPDATE]);
+                return $this->statements[self::UPDATE][self::QUERY_ARRAY_STATEMENT]->execute();
             } else {
-                $this->bindProperties($this->statements[INSERT]);
+                $this->bindProperties($this->statements[self::INSERT]);
                 return $this->statements[self::INSERT][self::QUERY_ARRAY_STATEMENT]->execute();
             }
         }
@@ -117,6 +146,7 @@ abstract class BaseEntity {
         $this->bindProperties($this->statements[self::SELECT]);
         if($this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->execute()) {
             $result = $this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->fetch(\PDO::FETCH_ASSOC);
+            if(empty($result)) throw new \Snok\Exception\ObjectNotFoundException();
             foreach($this->properties as $property) {
                 $property->setValue($this, $result[$property->name]);
             }
@@ -125,7 +155,11 @@ abstract class BaseEntity {
 
     public function delete() {
         $this->bindProperties($this->statements[self::DELETE]);
-        return $this->statements[self::DELETE][self::QUERY_ARRAY_STATEMENT]->execute();
+        $status = $this->statements[self::DELETE][self::QUERY_ARRAY_STATEMENT]->execute();
+        foreach($this->properties as $property) {
+            if(!in_array($property->name, $this->constants[self::PRIMARY_KEY])) continue;
+            $property->setValue($this, null);
+        }
     }
 }
 ?>
