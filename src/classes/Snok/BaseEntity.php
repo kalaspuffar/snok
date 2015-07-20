@@ -107,7 +107,7 @@ abstract class BaseEntity {
     private function checkAllPrimaryKeys() {
         $keys = $this->constants[self::PRIMARY_KEY];
         foreach($this->properties as $property) {
-            if(in_array($property->name, $this->constants[self::REQUIRED_VALUES]) && $property->getValue($this) != null) {
+            if(in_array($property->name, $this->constants[self::REQUIRED_VALUES]) && $property->getValue($this) == null) {
                 throw new \Snok\Exception\MissingRequiredFieldException();
             }
             if(!in_array($property->name, $keys)) continue;
