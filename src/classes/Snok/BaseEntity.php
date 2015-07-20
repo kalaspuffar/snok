@@ -13,6 +13,7 @@ abstract class BaseEntity {
 
     const PRIMARY_KEY = "PRIMARY_KEYS";
     const TABLE_NAME = "TABLE_NAME";
+    const POSTGRES_DRIVER_NAME = "pgsql";
 
     private $statements;
     private $constants;
@@ -57,6 +58,10 @@ abstract class BaseEntity {
 
         $insertStatementAutoGenerateSQL .= "(" . $this->createParamString($propertyNamesWithoutPrimaryKeys, "%", ",") . ") VALUES (";
         $insertStatementAutoGenerateSQL .= $this->createParamString($propertyNamesWithoutPrimaryKeys, ":%", ",") . ")";
+
+        if($this->database->getAttribute(\PDO::ATTR_DRIVER_NAME) == self::POSTGRES_DRIVER_NAME) {
+            $insertStatementAutoGenerateSQL .= " RETURNING " . $this->createParamString($this->constants[self::PRIMARY_KEY], "%", ",");
+        }
 
         $updateStatementSQL .= $this->createParamString($propertyNamesWithoutPrimaryKeys, "% = :%", ",") . " WHERE ";
         $updateStatementSQL .= $this->createParamString($this->constants[self::PRIMARY_KEY], "% = :%", " AND ");
@@ -118,9 +123,19 @@ abstract class BaseEntity {
             $this->bindProperties($this->statements[self::INSERT_AUTO]);
             $status = $this->statements[self::INSERT_AUTO][self::QUERY_ARRAY_STATEMENT]->execute();
             $newIDs = array();
-            foreach($this->constants[self::PRIMARY_KEY] as $key) {
-                $newIDs[$key] = $this->database->lastInsertId($key);
+            if($this->database->getAttribute(\PDO::ATTR_DRIVER_NAME) == self::POSTGRES_DRIVER_NAME) {
+                $result = $this->statements[self::INSERT_AUTO][self::QUERY_ARRAY_STATEMENT]->fetch(\PDO::FETCH_ASSOC);
+                if($result) {
+                    foreach($this->constants[self::PRIMARY_KEY] as $key) {
+                        if(array_key_exists($key, $result)) $newIDs[$key] = $result[$key];
+                    }
+                }
+            } else {
+                foreach($this->constants[self::PRIMARY_KEY] as $key) {
+                    $newIDs[$key] = $this->database->lastInsertId($key);
+                }
             }
+
             foreach($this->properties as $property) {
                 if(!array_key_exists($property->name, $newIDs)) continue;
                 $property->setValue($this, $newIDs[$property->name]);
