@@ -1,6 +1,18 @@
 {
+    "name": "kalaspuffar/snok",
+    "description": "A very small ORM implementation",
+    "type": "library",
+    "keywords": ["database", "generator", "query", "ORM"],
+    "homepage": "https://github.com/kalaspuffar/snok",
+    "license": "Apache-2.0",
+    "require": {
+        "php" : ">=5.3.3"
+    },
     "autoload": {
-        "classmap": ["src/classes/", "tests/"]
+        "psr-4": {
+            "Snok\\": ["src/classes"],
+            "Test\\Snok\\": ["test/classes"]
+        }
     },
     "require-dev": {
         "phpunit/phpunit": "4.7.*",

@@ -1,5 +1,5 @@
 <?php
-namespace tests\Snok;
+namespace Test\Snok;
 /**
  * Class to retrieve the config for tests.
  */

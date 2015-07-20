@@ -1,5 +1,5 @@
 <?php
-namespace tests\Snok;
+namespace Test\Snok;
 
 class Species extends \Snok\BaseEntity {
 

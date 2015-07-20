@@ -1,5 +1,5 @@
 <?php
-namespace tests\Snok;
+namespace Test\Snok;
 
 class People extends \Snok\BaseEntity {
 
