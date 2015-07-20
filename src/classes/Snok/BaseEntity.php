@@ -13,6 +13,7 @@ abstract class BaseEntity {
 
     const PRIMARY_KEY = "PRIMARY_KEYS";
     const TABLE_NAME = "TABLE_NAME";
+    const REQUIRED_VALUES = "REQUIRED_VALUES";
     const POSTGRES_DRIVER_NAME = "pgsql";
 
     private $statements;
@@ -94,7 +95,6 @@ abstract class BaseEntity {
             self::QUERY_ARRAY_STATEMENT => $this->database->prepare($deleteStatementSQL),
             self::QUERY_ARRAY_PARAMS => $this->constants[self::PRIMARY_KEY]
             );
-
     }
 
     private function bindProperties(&$queryArray) {
@@ -173,6 +173,27 @@ abstract class BaseEntity {
         foreach($this->properties as $property) {
             if(!in_array($property->name, $this->constants[self::PRIMARY_KEY])) continue;
             $property->setValue($this, null);
+        }
+    }
+
+    public function toObject() {
+        $newObj = new \StdClass();
+        foreach($this->properties as $property) {
+            $newObj->{$property->name} = $property->getValue($this);
+        }
+        return $newObj;
+    }
+
+
+    public function fromObject($obj) {
+        foreach($this->properties as $property) {
+            if(!property_exists($obj, $property->name)) {
+                if(in_array($property->name, $this->constants[self::REQUIRED_VALUES])) {
+                    throw new \Snok\Exception\MissingRequiredFieldException();
+                }
+                continue;
+            }
+            $property->setValue($this, $obj->{$property->name});
         }
     }
 }

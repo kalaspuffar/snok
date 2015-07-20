@@ -187,4 +187,35 @@ class SqliteCRUDTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals("Logan", $instance2->name, "When adding a name to an object with auto increment name should be returned.");
     }
 
+    public function testSimpleObject() {
+
+        $reflection = new \ReflectionClass("\\tests\\Snok\\Species");
+        $instance = $reflection->newInstanceWithoutConstructor();
+        $this->setupEntity($instance);
+
+        $simpleObj = new \StdClass();
+        $simpleObj->type = "Lizard";
+
+        $this->setExpectedException("\Snok\Exception\MissingRequiredFieldException");
+        $instance->fromObject($simpleObj);
+
+        $simpleObj->name = "Ola";
+        $instance->fromObject($simpleObj);
+        $instance->commit();
+
+        $instance2 = $reflection->newInstanceWithoutConstructor();
+        $this->setupEntity($instance2);
+
+        $this->assertNull($instance2->id);
+        $this->assertNull($instance2->name);
+        $this->assertNull($instance2->type);
+
+        $instance2->id = $instance->id;
+        $instance2->refresh();
+
+        $obj = $instance2->toObject();
+        $this->assertEquals(get_class($obj), "stdClass");
+        $this->assertEquals($obj->name, "Ola");
+        $this->assertEquals($obj->type, "Lizard");
+    }
 }
