@@ -1,0 +1,16 @@
+{
+    "postgresql": {
+        "host": "localhost",
+        "port": "5432",
+        "database": "snokdb",
+        "username": "",
+        "password": ""
+    },
+    "mysql": {
+        "host": "localhost",
+        "port": "3306",
+        "database": "snokdb",
+        "username": "",
+        "password": ""
+    }
+}

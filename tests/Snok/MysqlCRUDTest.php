@@ -9,7 +9,12 @@ class MysqlCRUDTest extends \PHPUnit_Framework_TestCase {
 
     public static function setUpBeforeClass()
     {
-        self::$dbh = new \PDO('mysql:host=localhost;dbname=snokdb;charset=utf8', 'root', 'testroot');
+        $config = new TestConfig();
+        if(!$config->mysqlConfig) return;
+        $c = $config->mysqlConfig;
+        self::$dbh = new \PDO("mysql:host=".$c["host"].";port=".$c["port"].";dbname=".$c["database"].";charset=utf8",$c["username"],$c["password"]);
+
+        self::$dbh = new \PDO('mysql:host=localhost;port=3306;dbname=snokdb;charset=utf8', 'root', 'testroot');
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS people (id INTEGER NOT NULL AUTO_INCREMENT, name TEXT, PRIMARY KEY (id))");
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS species (id INTEGER NOT NULL AUTO_INCREMENT, type TEXT, name TEXT, PRIMARY KEY (id))");
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS tools (id INTEGER NOT NULL AUTO_INCREMENT, name TEXT, PRIMARY KEY (id))");

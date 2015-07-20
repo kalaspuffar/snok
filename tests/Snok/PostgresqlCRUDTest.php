@@ -9,7 +9,10 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
 
     public static function setUpBeforeClass()
     {
-        self::$dbh = new \PDO('pgsql:host=localhost;port=5432;dbname=snokdb;user=postgres;password=testroot');
+        $config = new TestConfig();
+        if(!$config->postgresqlConfig) return;
+        $c = $config->postgresqlConfig;
+        self::$dbh = new \PDO("pgsql:host=".$c["host"].";port=".$c["port"].";dbname=".$c["database"].";user=".$c["username"].";password=".$c["password"]);
 
         self::$dbh->exec("CREATE SEQUENCE people_id_seq");
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS people (id smallint DEFAULT nextval('people_id_seq'), name TEXT, PRIMARY KEY(id))");
