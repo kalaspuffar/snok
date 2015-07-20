@@ -196,8 +196,9 @@ class SqliteCRUDTest extends \PHPUnit_Framework_TestCase {
         $simpleObj = new \StdClass();
         $simpleObj->type = "Lizard";
 
-        $this->setExpectedException("\Snok\Exception\MissingRequiredFieldException");
         $instance->fromObject($simpleObj);
+        $this->setExpectedException("\Snok\Exception\MissingRequiredFieldException");
+        $instance->commit();
 
         $simpleObj->name = "Ola";
         $instance->fromObject($simpleObj);
