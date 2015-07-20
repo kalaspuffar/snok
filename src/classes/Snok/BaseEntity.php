@@ -125,7 +125,6 @@ abstract class BaseEntity {
                 if(!array_key_exists($property->name, $newIDs)) continue;
                 $property->setValue($this, $newIDs[$property->name]);
             }
-
             return $status;
         } else {
             $this->bindProperties($this->statements[self::SELECT]);

@@ -4,8 +4,7 @@ namespace tests\Snok;
  * Test class for entity generator class
  */
 
-class SnokTest extends \PHPUnit_Framework_TestCase {
-    const DB_NAME = 'tests/data/test.db';
+class SqliteCRUDTest extends \PHPUnit_Framework_TestCase {
     protected static $dbh;
 
     public static function setUpBeforeClass()
@@ -14,7 +13,7 @@ class SnokTest extends \PHPUnit_Framework_TestCase {
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS people (id INTEGER PRIMARY KEY, name TEXT)");
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS species (id INTEGER PRIMARY KEY, type TEXT, name TEXT)");
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS tools (id INTEGER PRIMARY KEY, name TEXT)");
-        self::$dbh->exec("CREATE TABLE IF NOT EXISTS multikey (id1 INTEGER PRIMARY KEY, id2 INTEGER PRIMARY KEY, name TEXT)");
+        self::$dbh->exec("CREATE TABLE IF NOT EXISTS multikey (id1 INTEGER, id2 INTEGER, name TEXT, PRIMARY KEY(id1, id2))");
 
         $data = array(
                 "people" => array('John', 'Sally', 'Peter'),
@@ -165,16 +164,15 @@ class SnokTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals("Snake", $instance2->type);
     }
 
-/*
-    public function testPeopleCommitMultiKey() {
+    public function testPeopleCommitMultiKeyWithID() {
         $reflection = new \ReflectionClass("\\tests\\Snok\\MultiKey");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
-        print_r($instance);
 
+        $instance->id1 = 4;
+        $instance->id2 = 5;
         $instance->name = "Logan";
         $instance->commit();
-
 
         $instance2 = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance2);
@@ -188,5 +186,5 @@ class SnokTest extends \PHPUnit_Framework_TestCase {
         $instance2->refresh();
         $this->assertEquals("Logan", $instance2->name, "When adding a name to an object with auto increment name should be returned.");
     }
-*/
+
 }
