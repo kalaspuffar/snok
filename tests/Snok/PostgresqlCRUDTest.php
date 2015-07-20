@@ -53,6 +53,7 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
 
     public static function tearDownAfterClass()
     {
+        if (!self::$dbh) return;
         self::$dbh->exec("DROP TABLE people");
         self::$dbh->exec("DROP TABLE species");
         self::$dbh->exec("DROP TABLE tools");
@@ -61,6 +62,9 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     private function setupEntity(&$instance) {
+        if (!self::$dbh) {
+            $this->markTestSkipped('The postgresql database isn\'t available, check config and server.');
+        }
         $refObject = new \ReflectionClass($instance);
         $properties = $refObject->getProperties(\ReflectionProperty::IS_PROTECTED);
         foreach($properties as $property) {
