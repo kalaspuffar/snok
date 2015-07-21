@@ -35,9 +35,6 @@ class EntityGenerator {
         }
         if($q->execute()) {
             $res = $q->fetchAll(\PDO::FETCH_ASSOC);
-
-            print_r($res);
-
             foreach($res as $row) $this->generate($row["table_name"]);
         }
     }
