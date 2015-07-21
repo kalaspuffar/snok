@@ -1,12 +1,12 @@
 <?php
-namespace Test\Snok;
+namespace Test\Snok\Entity;
 
 class People extends \Snok\BaseEntity {
 
     const TABLE_NAME = "people";
     const PRIMARY_KEYS = array("id");
     const REQUIRED_VALUES = array("name");
-    const AUTO_GENERATED_KEYS = array("id");
+    const AUTO_INCREMENTED_KEYS = array("id");
 
     public $id;
     public $name;

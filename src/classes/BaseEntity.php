@@ -12,6 +12,7 @@ abstract class BaseEntity {
     const QUERY_ARRAY_PARAMS = "query_params";
 
     const PRIMARY_KEY = "PRIMARY_KEYS";
+    const AUTO_INCREMENT = "AUTO_INCREMENTED_KEYS";
     const TABLE_NAME = "TABLE_NAME";
     const REQUIRED_VALUES = "REQUIRED_VALUES";
     const POSTGRES_DRIVER_NAME = "pgsql";
@@ -21,16 +22,7 @@ abstract class BaseEntity {
     private $properties;
     protected $database;
 
-    private function createParamString($list, $valueTemplate, $separator) {
-        $first = true;
-        $string = "";
-        foreach($list as $val) {
-            if(!$first) $string .= $separator;
-            $string .= str_replace("%", $val, $valueTemplate);
-            $first = false;
-        }
-        return $string;
-    }
+
 
     public function __construct() {
         $refObject = new \ReflectionClass($this);
@@ -45,27 +37,27 @@ abstract class BaseEntity {
         $updateStatementSQL = "UPDATE " . $tableName . " SET ";
         $deleteStatementSQL = "DELETE FROM " . $tableName . " WHERE ";
 
-        $selectStatementSQL .= $this->createParamString($this->constants[self::PRIMARY_KEY], "% = :%", " AND ");
-        $deleteStatementSQL .= $this->createParamString($this->constants[self::PRIMARY_KEY], "% = :%", " AND ");
+        $selectStatementSQL .= Util::createParamString($this->constants[self::PRIMARY_KEY], "% = :%", " AND ");
+        $deleteStatementSQL .= Util::createParamString($this->constants[self::PRIMARY_KEY], "% = :%", " AND ");
 
         $propertyNames = array();
         foreach($this->properties as $property) {
             $propertyNames[] = $property->name;
         }
-        $insertStatementSQL .= "(" . $this->createParamString($propertyNames, "%", ",") . ") VALUES (";
-        $insertStatementSQL .= $this->createParamString($propertyNames, ":%", ",") . ")";
+        $insertStatementSQL .= "(" . Util::createParamString($propertyNames, "%", ",") . ") VALUES (";
+        $insertStatementSQL .= Util::createParamString($propertyNames, ":%", ",") . ")";
 
         $propertyNamesWithoutPrimaryKeys = array_diff($propertyNames, $this->constants[self::PRIMARY_KEY]);
 
-        $insertStatementAutoGenerateSQL .= "(" . $this->createParamString($propertyNamesWithoutPrimaryKeys, "%", ",") . ") VALUES (";
-        $insertStatementAutoGenerateSQL .= $this->createParamString($propertyNamesWithoutPrimaryKeys, ":%", ",") . ")";
+        $insertStatementAutoGenerateSQL .= "(" . Util::createParamString($propertyNamesWithoutPrimaryKeys, "%", ",") . ") VALUES (";
+        $insertStatementAutoGenerateSQL .= Util::createParamString($propertyNamesWithoutPrimaryKeys, ":%", ",") . ")";
 
         if($this->database->getAttribute(\PDO::ATTR_DRIVER_NAME) == self::POSTGRES_DRIVER_NAME) {
-            $insertStatementAutoGenerateSQL .= " RETURNING " . $this->createParamString($this->constants[self::PRIMARY_KEY], "%", ",");
+            $insertStatementAutoGenerateSQL .= " RETURNING " . Util::createParamString($this->constants[self::PRIMARY_KEY], "%", ",");
         }
 
-        $updateStatementSQL .= $this->createParamString($propertyNamesWithoutPrimaryKeys, "% = :%", ",") . " WHERE ";
-        $updateStatementSQL .= $this->createParamString($this->constants[self::PRIMARY_KEY], "% = :%", " AND ");
+        $updateStatementSQL .= Util::createParamString($propertyNamesWithoutPrimaryKeys, "% = :%", ",") . " WHERE ";
+        $updateStatementSQL .= Util::createParamString($this->constants[self::PRIMARY_KEY], "% = :%", " AND ");
 
         try {
             $this->statements[self::SELECT] = array(
@@ -122,7 +114,7 @@ abstract class BaseEntity {
 
     public function commit() {
         if(!$this->checkAllPrimaryKeys()) {
-            if($this->constants[self::PRIMARY_KEY] != $this->constants["AUTO_GENERATED_KEYS"]) return new \Snok\Exception\InvalidOperationException("Trying to auto generate ids when primary keys aren't the same as auto generated. Try creating setting id's instead.");
+            if($this->constants[self::PRIMARY_KEY] != $this->constants[self::AUTO_INCREMENT]) return new \Snok\Exception\InvalidOperationException("Trying to auto generate ids when primary keys aren't the same as auto generated. Try creating setting id's instead.");
             $this->bindProperties($this->statements[self::INSERT_AUTO]);
             $status = $this->statements[self::INSERT_AUTO][self::QUERY_ARRAY_STATEMENT]->execute();
             $newIDs = array();

@@ -22,9 +22,6 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS species (id smallint DEFAULT nextval('species_id_seq'), type TEXT, name TEXT, PRIMARY KEY(id))");
         self::$dbh->exec("ALTER SEQUENCE species_id_seq OWNED BY species.id");
 
-        self::$dbh->exec("CREATE TABLE IF NOT EXISTS tools (id smallint, name TEXT, PRIMARY KEY(id))");
-
-
         self::$dbh->exec("CREATE SEQUENCE multikey_id1_seq");
         self::$dbh->exec("CREATE SEQUENCE multikey_id2_seq");
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS people (id smallint DEFAULT nextval('people_id_seq'), name TEXT, PRIMARY KEY(id))");
@@ -36,10 +33,9 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
         $data = array(
                 "people" => array('John', 'Sally', 'Peter'),
                 "species" => array('Dog', 'Cat', 'Hamster'),
-                "tools" => array('Hammer', 'Screwdriver', 'Ruler')
             );
 
-        foreach(["people", "species", "tools"] as $table) {
+        foreach(["people", "species"] as $table) {
             $insert = "INSERT INTO {$table} (name) VALUES (:name)";
             $stmt = self::$dbh->prepare($insert);
             $stmt->bindParam(':name', $name);
@@ -54,9 +50,8 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
     public static function tearDownAfterClass()
     {
         if (!self::$dbh) return;
-        self::$dbh->exec("DROP TABLE people");
+//        self::$dbh->exec("DROP TABLE people");
         self::$dbh->exec("DROP TABLE species");
-        self::$dbh->exec("DROP TABLE tools");
         self::$dbh->exec("DROP TABLE multikey");
         self::$dbh = NULL;
     }
@@ -78,7 +73,7 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleRead() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
         $instance->id = 1;
@@ -88,7 +83,7 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testPeopleCommit() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -108,7 +103,7 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testPeopleCommitWithID() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -125,7 +120,7 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleUpdate() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -149,7 +144,7 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleDelete() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -168,7 +163,7 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleCommitMultiValue() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\Species");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\Species");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -191,7 +186,7 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleCommitMultiKey() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\MultiKey");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\MultiKey");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -212,7 +207,7 @@ class PostgresqlCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleCommitMultiKeyWithID() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\MultiKey");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\MultiKey");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 

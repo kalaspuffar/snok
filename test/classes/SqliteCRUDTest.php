@@ -12,16 +12,14 @@ class SqliteCRUDTest extends \PHPUnit_Framework_TestCase {
         self::$dbh = new \PDO('sqlite::memory:');
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS people (id INTEGER PRIMARY KEY, name TEXT)");
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS species (id INTEGER PRIMARY KEY, type TEXT, name TEXT)");
-        self::$dbh->exec("CREATE TABLE IF NOT EXISTS tools (id INTEGER PRIMARY KEY, name TEXT)");
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS multikey (id1 INTEGER, id2 INTEGER, name TEXT, PRIMARY KEY(id1, id2))");
 
         $data = array(
                 "people" => array('John', 'Sally', 'Peter'),
                 "species" => array('Dog', 'Cat', 'Hamster'),
-                "tools" => array('Hammer', 'Screwdriver', 'Ruler')
             );
 
-        foreach(["people", "species", "tools"] as $table) {
+        foreach(["people", "species"] as $table) {
             $insert = "INSERT INTO {$table} (name) VALUES (:name)";
             $stmt = self::$dbh->prepare($insert);
             $stmt->bindParam(':name', $name);
@@ -52,7 +50,7 @@ class SqliteCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleRead() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
         $instance->id = 1;
@@ -62,7 +60,7 @@ class SqliteCRUDTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testPeopleCommit() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -82,7 +80,7 @@ class SqliteCRUDTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testPeopleCommitWithID() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -99,7 +97,7 @@ class SqliteCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleUpdate() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -123,7 +121,7 @@ class SqliteCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleDelete() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -142,7 +140,7 @@ class SqliteCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleCommitMultiValue() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\Species");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\Species");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -165,7 +163,7 @@ class SqliteCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleCommitMultiKeyWithID() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\MultiKey");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\MultiKey");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -189,7 +187,7 @@ class SqliteCRUDTest extends \PHPUnit_Framework_TestCase {
 
     public function testSimpleObject() {
 
-        $reflection = new \ReflectionClass("\\Test\\Snok\\Species");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\Species");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 

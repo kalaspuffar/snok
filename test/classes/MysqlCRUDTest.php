@@ -14,19 +14,16 @@ class MysqlCRUDTest extends \PHPUnit_Framework_TestCase {
         $c = $config->mysqlConfig;
         self::$dbh = new \PDO("mysql:host=".$c["host"].";port=".$c["port"].";dbname=".$c["database"].";charset=utf8",$c["username"],$c["password"]);
 
-        self::$dbh = new \PDO('mysql:host=localhost;port=3306;dbname=snokdb;charset=utf8', 'root', 'testroot');
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS people (id INTEGER NOT NULL AUTO_INCREMENT, name TEXT, PRIMARY KEY (id))");
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS species (id INTEGER NOT NULL AUTO_INCREMENT, type TEXT, name TEXT, PRIMARY KEY (id))");
-        self::$dbh->exec("CREATE TABLE IF NOT EXISTS tools (id INTEGER NOT NULL AUTO_INCREMENT, name TEXT, PRIMARY KEY (id))");
         self::$dbh->exec("CREATE TABLE IF NOT EXISTS multikey (id1 INTEGER NOT NULL, id2 INTEGER NOT NULL, name TEXT, PRIMARY KEY(id1, id2))");
 
         $data = array(
                 "people" => array('John', 'Sally', 'Peter'),
                 "species" => array('Dog', 'Cat', 'Hamster'),
-                "tools" => array('Hammer', 'Screwdriver', 'Ruler')
             );
 
-        foreach(["people", "species", "tools"] as $table) {
+        foreach(["people", "species"] as $table) {
             $insert = "INSERT INTO {$table} (name) VALUES (:name)";
             $stmt = self::$dbh->prepare($insert);
             $stmt->bindParam(':name', $name);
@@ -43,7 +40,6 @@ class MysqlCRUDTest extends \PHPUnit_Framework_TestCase {
         if (!self::$dbh) return;
         self::$dbh->exec("DROP TABLE people");
         self::$dbh->exec("DROP TABLE species");
-        self::$dbh->exec("DROP TABLE tools");
         self::$dbh->exec("DROP TABLE multikey");
         self::$dbh = NULL;
     }
@@ -65,7 +61,7 @@ class MysqlCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleRead() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
         $instance->id = 1;
@@ -75,7 +71,7 @@ class MysqlCRUDTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testPeopleCommit() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -95,7 +91,7 @@ class MysqlCRUDTest extends \PHPUnit_Framework_TestCase {
 
 
     public function testPeopleCommitWithID() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -112,7 +108,7 @@ class MysqlCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleUpdate() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -136,7 +132,7 @@ class MysqlCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleDelete() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\People");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -155,7 +151,7 @@ class MysqlCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleCommitMultiValue() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\Species");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\Species");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
@@ -178,7 +174,7 @@ class MysqlCRUDTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPeopleCommitMultiKeyWithID() {
-        $reflection = new \ReflectionClass("\\Test\\Snok\\MultiKey");
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\MultiKey");
         $instance = $reflection->newInstanceWithoutConstructor();
         $this->setupEntity($instance);
 
