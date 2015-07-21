@@ -9,9 +9,9 @@ The core of this project is that the database is the master.
 
 Features we support:
 - Handle CRUD for entities using primary key
+- Generate entities
 
 Features we will implement:
-- Auto generate entities
 - Return objects from select statements with joins
 
 This project will be implemented fully open source and with as lean license as possible,
