@@ -217,4 +217,69 @@ class SqliteCRUDTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($obj->name, "Ola");
         $this->assertEquals($obj->type, "Lizard");
     }
+
+    public function testConsistencyAutoIncrement() {
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
+        $instance = $reflection->newInstanceWithoutConstructor();
+        $this->setupEntity($instance);
+
+        $instance->name = "Haily";
+        $instance->commit();
+
+        $instance2 = $reflection->newInstanceWithoutConstructor();
+        $this->setupEntity($instance2);
+
+        $instance2->id = $instance->id;
+        $instance2->refresh();
+        $instance2->name = "Pat";
+        $instance2->commit();
+
+        $instance->name = "Ronald";
+        $this->setExpectedException("\Snok\Exception\DataConsistencyException");
+        $instance->commit();
+    }
+
+    public function testConsistencyWithID() {
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
+        $instance = $reflection->newInstanceWithoutConstructor();
+        $this->setupEntity($instance);
+
+        $instance->id = 89;
+        $instance->name = "Haily";
+        $instance->commit();
+
+        $instance2 = $reflection->newInstanceWithoutConstructor();
+        $this->setupEntity($instance2);
+
+        $instance2->id = $instance->id;
+        $instance2->refresh();
+        $instance2->name = "Pat";
+        $instance2->commit();
+
+        $instance->name = "Ronald";
+        $this->setExpectedException("\Snok\Exception\DataConsistencyException");
+        $instance->commit();
+    }
+
+    public function testConsistencyRefresh() {
+        $reflection = new \ReflectionClass("\\Test\\Snok\\Entity\\People");
+        $instance = $reflection->newInstanceWithoutConstructor();
+        $this->setupEntity($instance);
+
+        $instance->name = "Haily";
+        $instance->commit();
+        $instance->refresh();
+
+        $instance2 = $reflection->newInstanceWithoutConstructor();
+        $this->setupEntity($instance2);
+
+        $instance2->id = $instance->id;
+        $instance2->refresh();
+        $instance2->name = "Pat";
+        $instance2->commit();
+
+        $instance->name = "Ronald";
+        $this->setExpectedException("\Snok\Exception\DataConsistencyException");
+        $instance->commit();
+    }
 }

@@ -1,5 +1,8 @@
 <?php
 namespace Snok;
+use Snok\Exception\InvalidOperationException;
+use Snok\Exception\DataConsistencyException;
+use Snok\Exception\MissingRequiredFieldException;
 
 abstract class BaseEntity {
     const SELECT = "select_statement";
@@ -20,6 +23,7 @@ abstract class BaseEntity {
     private $statements;
     private $constants;
     private $properties;
+    private $table_hash;
     protected $database;
 
     public function __construct() {
@@ -102,7 +106,7 @@ abstract class BaseEntity {
         $keys = $this->constants[self::PRIMARY_KEY];
         foreach($this->properties as $property) {
             if(in_array($property->name, $this->constants[self::REQUIRED_VALUES]) && $property->getValue($this) == null) {
-                throw new \Snok\Exception\MissingRequiredFieldException();
+                throw new MissingRequiredFieldException();
             }
             if(!in_array($property->name, $keys)) continue;
             if(!empty($property->getValue($this))) {
@@ -116,7 +120,9 @@ abstract class BaseEntity {
 
     public function commit() {
         if(!$this->checkAllPrimaryKeys()) {
-            if($this->constants[self::PRIMARY_KEY] != $this->constants[self::AUTO_INCREMENT]) return new \Snok\Exception\InvalidOperationException("Trying to auto generate ids when primary keys aren't the same as auto generated. Try creating setting id's instead.");
+            if($this->constants[self::PRIMARY_KEY] != $this->constants[self::AUTO_INCREMENT]) {
+                throw new InvalidOperationException("Trying to auto generate ids when primary keys aren't the same as auto generated. Try creating setting id's instead.");
+            }
             $this->bindProperties($this->statements[self::INSERT_AUTO]);
             $status = $this->statements[self::INSERT_AUTO][self::QUERY_ARRAY_STATEMENT]->execute();
             $newIDs = array();
@@ -133,19 +139,39 @@ abstract class BaseEntity {
                 }
             }
 
+
+            $new_table_hash = "";
             foreach($this->properties as $property) {
-                if(!array_key_exists($property->name, $newIDs)) continue;
-                $property->setValue($this, $newIDs[$property->name]);
+                if(array_key_exists($property->name, $newIDs)) $property->setValue($this, $newIDs[$property->name]);
+                $new_table_hash .= $property->getValue($this) . "|";
             }
+            $this->table_hash = md5($new_table_hash);
             return $status;
         } else {
             $this->bindProperties($this->statements[self::SELECT]);
             $this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->execute();
             $result = $this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->fetch(\PDO::FETCH_ASSOC);
             if($result) {
+
+                if($this->table_hash) {
+                    $new_table_hash = "";
+                    foreach($this->properties as $property) {
+                        $new_table_hash .= $result[$property->name] . "|";
+                    }
+                    $new_table_hash = md5($new_table_hash);
+
+                    if($this->table_hash != $new_table_hash) {
+                        throw new DataConsistencyException("Data in database doesn't match data in this entity. Hashes: " . $this->table_hash . " != " . $new_table_hash);
+                    }
+                }
+
                 $this->bindProperties($this->statements[self::UPDATE]);
                 return $this->statements[self::UPDATE][self::QUERY_ARRAY_STATEMENT]->execute();
             } else {
+                $new_table_hash = "";
+                foreach($this->properties as $property) $new_table_hash .= $property->getValue($this) . "|";
+                $this->table_hash = md5($new_table_hash);
+
                 $this->bindProperties($this->statements[self::INSERT]);
                 return $this->statements[self::INSERT][self::QUERY_ARRAY_STATEMENT]->execute();
             }
@@ -158,9 +184,13 @@ abstract class BaseEntity {
         if($this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->execute()) {
             $result = $this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->fetch(\PDO::FETCH_ASSOC);
             if(empty($result)) throw new \Snok\Exception\ObjectNotFoundException();
+
+            $new_table_hash = "";
             foreach($this->properties as $property) {
+                $new_table_hash .= $result[$property->name] . "|";
                 $property->setValue($this, $result[$property->name]);
             }
+            $this->table_hash = md5($new_table_hash);
         }
     }
 
