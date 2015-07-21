@@ -1,0 +1,25 @@
+// This is a sample of a connection configuration you could use for generation and running Snok.
+
+{
+    "entity_directory": "./src/classes/Entity",
+    "namespace": "\\Snok\\Entity",
+    "driver": "mysql",
+    "host": "localhost",
+    "port": "3306",
+    "database": "snokdb",
+    "username": "",
+    "password": ""
+}
+
+// OR the one below for postresql.
+
+{
+    "entity_directory": "./src/classes/Entity",
+    "namespace": "\\Snok\\Entity",
+    "driver": "pgsql",
+    "host": "localhost",
+    "port": "5432",
+    "database": "snokdb",
+    "username": "",
+    "password": ""
+}

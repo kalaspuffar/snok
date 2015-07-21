@@ -22,9 +22,11 @@ abstract class BaseEntity {
     private $properties;
     protected $database;
 
-
-
     public function __construct() {
+        if($this->database == null) {
+            $this->database = Util::getDatabaseConnection(Util::getConfiguration());
+        }
+
         $refObject = new \ReflectionClass($this);
         $this->properties = $refObject->getProperties(\ReflectionProperty::IS_PUBLIC);
         $this->constants = $refObject->getConstants();

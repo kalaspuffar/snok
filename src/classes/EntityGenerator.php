@@ -7,12 +7,42 @@ class EntityGenerator {
     const MYSQL_DRIVER_NAME = "mysql";
 
     private $database;
+    private $configuration;
+    private $entity_directory;
+    private $namespace;
 
-    public function __construct($database = null) {
+    public function __construct($database = null, $namespace = null, $entity_directory = null) {
         $this->database = $database;
+        $this->namespace = $namespace;
+        $this->entity_directory = $entity_directory;
+        $this->configuration = Util::getConfiguration();
+        if($this->database == null) {
+            $this->database = Util::getDatabaseConnection($this->configuration);
+        }
+        if($this->namespace == null) {
+            $this->namespace = $this->configuration["namespace"];
+        }
+        if($this->entity_directory == null) {
+            $this->entity_directory = $this->configuration["entity_directory"];
+        }
     }
 
-    public function generate($namespace, $tablename, $output_directory) {
+    public function generateAll() {
+        if($this->database->getAttribute(\PDO::ATTR_DRIVER_NAME) == self::MYSQL_DRIVER_NAME) {
+            $q = $this->database->prepare("select table_name from INFORMATION_SCHEMA.TABLES where table_schema = '" . $this->configuration["database"] . "'");
+        } else {
+            $q = $this->database->prepare("select table_name from INFORMATION_SCHEMA.TABLES where table_catalog = '" . $this->configuration["database"] . "' and table_schema = 'public'");
+        }
+        if($q->execute()) {
+            $res = $q->fetchAll(\PDO::FETCH_ASSOC);
+
+            print_r($res);
+
+            foreach($res as $row) $this->generate($row["table_name"]);
+        }
+    }
+
+    public function generate($tablename) {
 
         $tablename = strtolower($tablename);
 
@@ -44,7 +74,7 @@ class EntityGenerator {
             }
 
             $phpcode = "<?php\n";
-            $phpcode .= "namespace " . $namespace . ";\n\n";
+            $phpcode .= "namespace " . $this->namespace . ";\n\n";
             $phpcode .= "class " . ucfirst($tablename) . " extends \Snok\BaseEntity {\n\n";
             $phpcode .= "\tconst TABLE_NAME = \"" . $tablename . "\";\n";
             $phpcode .= "\tconst PRIMARY_KEYS = array(" . Util::createParamString($primary, "\"%\"", ",") . ");\n";
@@ -60,7 +90,7 @@ class EntityGenerator {
             $phpcode .= "}\n";
             $phpcode .= "?>";
 
-            file_put_contents($output_directory . "/" . ucfirst($tablename) . ".php", str_replace("\t", "    ", $phpcode));
+            file_put_contents($this->entity_directory . "/" . ucfirst($tablename) . ".php", str_replace("\t", "    ", $phpcode));
         }
 
 /*

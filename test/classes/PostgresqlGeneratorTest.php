@@ -21,8 +21,6 @@ class PostgresqlGeneratorTest extends \PHPUnit_Framework_TestCase {
     {
         if (!self::$dbh) return;
         self::$dbh->exec("DROP TABLE people");
-        self::$dbh->exec("DROP TABLE species");
-        self::$dbh->exec("DROP TABLE multikey");
         self::$dbh = NULL;
     }
 
@@ -43,9 +41,8 @@ class PostgresqlGeneratorTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGenerator() {
-        $generator = new \Snok\EntityGenerator(self::$dbh);
-        $generator->generate("Test\Snok\Entity", "article", __DIR__."/Entity");
-
+        $generator = new \Snok\EntityGenerator(self::$dbh, "Test\Snok\Entity", __DIR__."/Entity");
+        $generator->generateAll();
 
         require_once(__DIR__  . "/Entity/Article.php");
 
