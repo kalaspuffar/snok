@@ -3,9 +3,8 @@
 
 This project isn't trying to be a feature complete ORM implemenation at the moment.
 
-We focus on the smallest parts that is required to quickly implement an project.
-
-The core of this project is that the database is the master.
+We focus on the creating a small implementation of the core features of ORM.
+The core of this project is handling the database as the master.
 
 Features we support:
 - Handle CRUD for entities using primary key
