@@ -20,6 +20,7 @@ class TestConfig {
     }
 
     public function __construct() {
+        if(!file_exists(__DIR__ . "/config.json")) return;
         $configStr = file_get_contents(__DIR__ . "/config.json");
         if(!$configStr) return;
         $configArr = json_decode($configStr, true);

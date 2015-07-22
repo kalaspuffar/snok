@@ -41,6 +41,9 @@ class MysqlGeneratorTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGenerator() {
+        if (!self::$dbh) {
+            $this->markTestSkipped('The mysql database isn\'t available, check config and server.');
+        }
         $generator = new \Snok\EntityGenerator(self::$dbh, "Test\Snok\Entity", __DIR__."/Entity");
         $generator->generateAll();
 
