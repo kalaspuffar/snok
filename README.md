@@ -1,4 +1,9 @@
 # SNOK
+
+[![Build Status](https://travis-ci.org/kalaspuffar/snok.svg?branch=master)](https://travis-ci.org/podphp/pod-ini)
+[![Code Coverage](https://scrutinizer-ci.com/g/kalaspuffar/snok/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/podphp/pod-ini/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kalaspuffar/snok/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/podphp/pod-ini/?branch=master)
+
 ### A very small ORM implementation
 
 This project isn't trying to be a feature complete ORM implemenation at the moment.
