@@ -4,4 +4,3 @@
 
     $generator = new \Snok\EntityGenerator();
     $generator->generateAll();
-?>

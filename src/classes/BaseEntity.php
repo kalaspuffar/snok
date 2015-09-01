@@ -35,7 +35,6 @@ abstract class BaseEntity {
         $this->properties = $refObject->getProperties(\ReflectionProperty::IS_PUBLIC);
         $this->constants = $refObject->getConstants();
         $tableName = $this->constants[self::TABLE_NAME];
-        $statements = array();
 
         $selectStatementSQL = "SELECT * FROM " . $tableName . " WHERE ";
         $insertStatementSQL = "INSERT INTO " . $tableName . " ";
@@ -129,13 +128,17 @@ abstract class BaseEntity {
             if($this->database->getAttribute(\PDO::ATTR_DRIVER_NAME) == self::POSTGRES_DRIVER_NAME) {
                 $result = $this->statements[self::INSERT_AUTO][self::QUERY_ARRAY_STATEMENT]->fetch(\PDO::FETCH_ASSOC);
                 if($result) {
-                    foreach($this->constants[self::PRIMARY_KEY] as $key) {
-                        if(array_key_exists($key, $result)) $newIDs[$key] = $result[$key];
+                    if(is_array($this->constants)) {
+                        foreach($this->constants[self::PRIMARY_KEY] as $key) {
+                            if(array_key_exists($key, $result)) $newIDs[$key] = $result[$key];
+                        }
                     }
                 }
             } else {
-                foreach($this->constants[self::PRIMARY_KEY] as $key) {
-                    $newIDs[$key] = $this->database->lastInsertId($key);
+                if(is_array($this->constants)) {
+                    foreach($this->constants[self::PRIMARY_KEY] as $key) {
+                        $newIDs[$key] = $this->database->lastInsertId($key);
+                    }
                 }
             }
 
@@ -176,7 +179,6 @@ abstract class BaseEntity {
                 return $this->statements[self::INSERT][self::QUERY_ARRAY_STATEMENT]->execute();
             }
         }
-        return false;
     }
 
     public function refresh() {
@@ -196,7 +198,7 @@ abstract class BaseEntity {
 
     public function delete() {
         $this->bindProperties($this->statements[self::DELETE]);
-        $status = $this->statements[self::DELETE][self::QUERY_ARRAY_STATEMENT]->execute();
+        $this->statements[self::DELETE][self::QUERY_ARRAY_STATEMENT]->execute();
         foreach($this->properties as $property) {
             if(!in_array($property->name, $this->constants[self::PRIMARY_KEY])) continue;
             $property->setValue($this, null);
@@ -219,4 +221,3 @@ abstract class BaseEntity {
         }
     }
 }
-?>
