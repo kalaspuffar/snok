@@ -46,7 +46,7 @@ abstract class BaseEntity {
         $deleteStatementSQL .= Util::createParamString($this->constants[self::PRIMARY_KEY], "% = :%", " AND ");
 
         $propertyNames = array();
-        foreach($this->properties as $property) {
+        foreach ($this->properties as $property) {
             $propertyNames[] = $property->name;
         }
         $insertStatementSQL .= "(" . Util::createParamString($propertyNames, "%", ",") . ") VALUES (";
@@ -57,7 +57,7 @@ abstract class BaseEntity {
         $insertStatementAutoGenerateSQL .= "(" . Util::createParamString($propertyNamesWithoutPrimaryKeys, "%", ",") . ") VALUES (";
         $insertStatementAutoGenerateSQL .= Util::createParamString($propertyNamesWithoutPrimaryKeys, ":%", ",") . ")";
 
-        if($this->database->getAttribute(\PDO::ATTR_DRIVER_NAME) == self::POSTGRES_DRIVER_NAME) {
+        if ($this->database->getAttribute(\PDO::ATTR_DRIVER_NAME) == self::POSTGRES_DRIVER_NAME) {
             $insertStatementAutoGenerateSQL .= " RETURNING " . Util::createParamString($this->constants[self::PRIMARY_KEY], "%", ",");
         }
 
@@ -95,21 +95,21 @@ abstract class BaseEntity {
     }
 
     private function bindProperties(&$queryArray) {
-        foreach($this->properties as $property) {
-            if(!in_array($property->name, $queryArray[self::QUERY_ARRAY_PARAMS])) continue;
+        foreach ($this->properties as $property) {
+            if (!in_array($property->name, $queryArray[self::QUERY_ARRAY_PARAMS])) continue;
             $queryArray[self::QUERY_ARRAY_STATEMENT]->bindValue(":" . $property->name, $property->getValue($this));
         }
     }
 
     private function checkAllPrimaryKeys() {
         $keys = $this->constants[self::PRIMARY_KEY];
-        foreach($this->properties as $property) {
-            if(in_array($property->name, $this->constants[self::REQUIRED_VALUES]) && $property->getValue($this) == null) {
+        foreach ($this->properties as $property) {
+            if (in_array($property->name, $this->constants[self::REQUIRED_VALUES]) && $property->getValue($this) == null) {
                 throw new MissingRequiredFieldException();
             }
-            if(!in_array($property->name, $keys)) continue;
-            if(!empty($property->getValue($this))) {
-                if(($key = array_search($property->name, $keys)) !== false) {
+            if (!in_array($property->name, $keys)) continue;
+            if (!empty($property->getValue($this))) {
+                if (($key = array_search($property->name, $keys)) !== false) {
                     unset($keys[$key]);
                 }
             }
@@ -118,25 +118,25 @@ abstract class BaseEntity {
     }
 
     public function commit() {
-        if(!$this->checkAllPrimaryKeys()) {
-            if($this->constants[self::PRIMARY_KEY] != $this->constants[self::AUTO_INCREMENT]) {
+        if (!$this->checkAllPrimaryKeys()) {
+            if ($this->constants[self::PRIMARY_KEY] != $this->constants[self::AUTO_INCREMENT]) {
                 throw new InvalidOperationException("Trying to auto generate ids when primary keys aren't the same as auto generated. Try creating setting id's instead.");
             }
             $this->bindProperties($this->statements[self::INSERT_AUTO]);
             $status = $this->statements[self::INSERT_AUTO][self::QUERY_ARRAY_STATEMENT]->execute();
             $newIDs = array();
-            if($this->database->getAttribute(\PDO::ATTR_DRIVER_NAME) == self::POSTGRES_DRIVER_NAME) {
+            if ($this->database->getAttribute(\PDO::ATTR_DRIVER_NAME) == self::POSTGRES_DRIVER_NAME) {
                 $result = $this->statements[self::INSERT_AUTO][self::QUERY_ARRAY_STATEMENT]->fetch(\PDO::FETCH_ASSOC);
-                if($result) {
-                    if(is_array($this->constants)) {
-                        foreach($this->constants[self::PRIMARY_KEY] as $key) {
-                            if(array_key_exists($key, $result)) $newIDs[$key] = $result[$key];
+                if ($result) {
+                    if (is_array($this->constants)) {
+                        foreach ($this->constants[self::PRIMARY_KEY] as $key) {
+                            if (array_key_exists($key, $result)) $newIDs[$key] = $result[$key];
                         }
                     }
                 }
             } else {
-                if(is_array($this->constants)) {
-                    foreach($this->constants[self::PRIMARY_KEY] as $key) {
+                if (is_array($this->constants)) {
+                    foreach ($this->constants[self::PRIMARY_KEY] as $key) {
                         $newIDs[$key] = $this->database->lastInsertId($key);
                     }
                 }
@@ -144,8 +144,8 @@ abstract class BaseEntity {
 
 
             $new_table_hash = "";
-            foreach($this->properties as $property) {
-                if(array_key_exists($property->name, $newIDs)) $property->setValue($this, $newIDs[$property->name]);
+            foreach ($this->properties as $property) {
+                if (array_key_exists($property->name, $newIDs)) $property->setValue($this, $newIDs[$property->name]);
                 $new_table_hash .= $property->getValue($this) . "|";
             }
             $this->table_hash = md5($new_table_hash);
@@ -156,14 +156,14 @@ abstract class BaseEntity {
             $result = $this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->fetch(\PDO::FETCH_ASSOC);
             if($result) {
 
-                if($this->table_hash) {
+                if ($this->table_hash) {
                     $new_table_hash = "";
-                    foreach($this->properties as $property) {
+                    foreach ($this->properties as $property) {
                         $new_table_hash .= $result[$property->name] . "|";
                     }
                     $new_table_hash = md5($new_table_hash);
 
-                    if($this->table_hash != $new_table_hash) {
+                    if ($this->table_hash != $new_table_hash) {
                         throw new DataConsistencyException("Data in database doesn't match data in this entity. Hashes: " . $this->table_hash . " != " . $new_table_hash);
                     }
                 }
@@ -172,7 +172,7 @@ abstract class BaseEntity {
                 return $this->statements[self::UPDATE][self::QUERY_ARRAY_STATEMENT]->execute();
             } else {
                 $new_table_hash = "";
-                foreach($this->properties as $property) $new_table_hash .= $property->getValue($this) . "|";
+                foreach ($this->properties as $property) $new_table_hash .= $property->getValue($this) . "|";
                 $this->table_hash = md5($new_table_hash);
 
                 $this->bindProperties($this->statements[self::INSERT]);
@@ -183,12 +183,12 @@ abstract class BaseEntity {
 
     public function refresh() {
         $this->bindProperties($this->statements[self::SELECT]);
-        if($this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->execute()) {
+        if ($this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->execute()) {
             $result = $this->statements[self::SELECT][self::QUERY_ARRAY_STATEMENT]->fetch(\PDO::FETCH_ASSOC);
-            if(empty($result)) throw new \Snok\Exception\ObjectNotFoundException();
+            if (empty($result)) throw new \Snok\Exception\ObjectNotFoundException();
 
             $new_table_hash = "";
-            foreach($this->properties as $property) {
+            foreach ($this->properties as $property) {
                 $new_table_hash .= $result[$property->name] . "|";
                 $property->setValue($this, $result[$property->name]);
             }
@@ -199,15 +199,15 @@ abstract class BaseEntity {
     public function delete() {
         $this->bindProperties($this->statements[self::DELETE]);
         $this->statements[self::DELETE][self::QUERY_ARRAY_STATEMENT]->execute();
-        foreach($this->properties as $property) {
-            if(!in_array($property->name, $this->constants[self::PRIMARY_KEY])) continue;
+        foreach ($this->properties as $property) {
+            if (!in_array($property->name, $this->constants[self::PRIMARY_KEY])) continue;
             $property->setValue($this, null);
         }
     }
 
     public function toObject() {
         $newObj = new \StdClass();
-        foreach($this->properties as $property) {
+        foreach ($this->properties as $property) {
             $newObj->{$property->name} = $property->getValue($this);
         }
         return $newObj;
@@ -215,8 +215,8 @@ abstract class BaseEntity {
 
 
     public function fromObject($obj) {
-        foreach($this->properties as $property) {
-            if(!property_exists($obj, $property->name)) continue;
+        foreach ($this->properties as $property) {
+            if (!property_exists($obj, $property->name)) continue;
             $property->setValue($this, $obj->{$property->name});
         }
     }

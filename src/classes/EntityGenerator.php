@@ -16,24 +16,24 @@ class EntityGenerator {
         $this->namespace = $namespace;
         $this->entity_directory = $entity_directory;
         $this->configuration = Util::getConfiguration();
-        if($this->database == null) {
+        if ($this->database == null) {
             $this->database = Util::getDatabaseConnection($this->configuration);
         }
-        if($this->namespace == null) {
+        if ($this->namespace == null) {
             $this->namespace = $this->configuration["namespace"];
         }
-        if($this->entity_directory == null) {
+        if ($this->entity_directory == null) {
             $this->entity_directory = $this->configuration["entity_directory"];
         }
     }
 
     public function generateAll() {
-        if($this->database->getAttribute(\PDO::ATTR_DRIVER_NAME) == self::MYSQL_DRIVER_NAME) {
+        if ($this->database->getAttribute(\PDO::ATTR_DRIVER_NAME) == self::MYSQL_DRIVER_NAME) {
             $q = $this->database->prepare("select table_name from INFORMATION_SCHEMA.TABLES where table_schema = '" . $this->configuration["database"] . "'");
         } else {
             $q = $this->database->prepare("select table_name from INFORMATION_SCHEMA.TABLES where table_catalog = '" . $this->configuration["database"] . "' and table_schema = 'public'");
         }
-        if($q->execute()) {
+        if ($q->execute()) {
             $res = $q->fetchAll(\PDO::FETCH_ASSOC);
             foreach($res as $row) $this->generate($row["table_name"]);
         }
@@ -44,14 +44,14 @@ class EntityGenerator {
         $tablename = strtolower($tablename);
 
         $extra = "";
-        if($this->database->getAttribute(\PDO::ATTR_DRIVER_NAME) == self::MYSQL_DRIVER_NAME) {
+        if ($this->database->getAttribute(\PDO::ATTR_DRIVER_NAME) == self::MYSQL_DRIVER_NAME) {
             $extra = ", column_key, extra";
         }
 
         $q = $this->database->prepare("select column_name, column_default, is_nullable, data_type" . $extra . " from INFORMATION_SCHEMA.COLUMNS where table_name = '" . $tablename . "'");
         $qpri = $this->database->prepare("select column_name from INFORMATION_SCHEMA.KEY_COLUMN_USAGE as kcu, INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc where kcu.table_name = '" . $tablename . "' and tc.table_name = '" . $tablename . "' and tc.constraint_type = 'PRIMARY KEY' and kcu.constraint_name = tc.constraint_name");
 
-        if($q->execute() && $qpri->execute()) {
+        if ($q->execute() && $qpri->execute()) {
             $res = $q->fetchAll(\PDO::FETCH_ASSOC);
 
             $columns = array();
@@ -60,10 +60,10 @@ class EntityGenerator {
             $auto_increment = array();
 
             $respri = $qpri->fetchAll(\PDO::FETCH_ASSOC);
-            foreach($respri as $row) {
+            foreach ($respri as $row) {
                 $primary[] = $row["column_name"];
             }
-            foreach($res as $row) {
+            foreach ($res as $row) {
                 $columns[] = $row["column_name"];
                 if($row["is_nullable"] != "YES" && !in_array($row["column_name"], $primary) && empty($row["column_default"])) $required[] = $row["column_name"];
                 if(array_key_exists("extra", $row) && $row["extra"] == "auto_increment") $auto_increment[] = $row["column_name"];
