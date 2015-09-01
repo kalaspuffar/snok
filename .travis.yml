@@ -12,6 +12,7 @@ script:
   - make test
 
 after_script:
-  - vendor/bin/phpunit -c phpunit.xml --coverage-clover=coverage.clover
+  - vendor/phpunit/phpunit/phpunit --bootstrap ./vendor/autoload.php ./test --coverage-clover=coverage.clover
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+
